@@ -61,4 +61,10 @@ class User extends Authenticatable
         return $this->hasOne(Profile::class);
     }
 
+    // recipes that the user likes
+    public function iLike()
+    {
+        return $this->belongsToMany(Recipe::class, 'likes_recipe');
+    }
+
 }

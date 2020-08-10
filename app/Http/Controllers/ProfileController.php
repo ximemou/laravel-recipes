@@ -5,9 +5,17 @@ namespace App\Http\Controllers;
 use App\Profile;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
+use App\Recipe;
 
 class ProfileController extends Controller
 {
+
+
+    public function __construct()
+    {
+        $this->middleware('auth', ['except'=>'show']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -47,7 +55,10 @@ class ProfileController extends Controller
      */
     public function show(Profile $profile)
     {
-        return view('profiles.show',compact('profile'));
+
+        //get recipes with pagination
+        $recipes = Recipe::where('user_id',$profile->user_id)->paginate(10);
+        return view('profiles.show',compact('profile','recipes'));
     }
 
     /**
@@ -58,6 +69,7 @@ class ProfileController extends Controller
      */
     public function edit(Profile $profile)
     {
+        $this->authorize('view',$profile);
         return view('profiles.edit',compact('profile'));
     }
 
@@ -70,6 +82,11 @@ class ProfileController extends Controller
      */
     public function update(Request $request, Profile $profile)
     {
+
+
+        //execute policy
+        $this->authorize('update', $profile);
+
         //validate
         $data=request()->validate([
             'name'=>'required',

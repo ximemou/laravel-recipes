@@ -22,8 +22,6 @@ class UserSeeder extends Seeder
             'password'=> Hash::make('123456789'),
             'url'=> 'http://codigoxime.com',
         ]);
-        $user->profile()->create();
-
 
         $user2 = User::create([
             'name'=> 'Pedro',
@@ -31,6 +29,6 @@ class UserSeeder extends Seeder
             'password'=> Hash::make('123456789'),
             'url'=> 'http://codigopedro.com',
         ]);
-        $user2->profile()->create();
+        
     }
 }

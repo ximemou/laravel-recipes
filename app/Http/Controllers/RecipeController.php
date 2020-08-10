@@ -16,7 +16,7 @@ class RecipeController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth',['except'=>'show']);
+        $this->middleware('auth',['except'=>['show','search']]);
     }
 
     /**
@@ -27,8 +27,13 @@ class RecipeController extends Controller
     public function index()
     {
         //
-        $recipes = auth()->user()->recipes;
-        return view('recipes.index')->with('recipes',$recipes);
+        $user = auth()->user();
+        //$recipes = auth()->user()->recipes;
+
+        //with pagination
+        $recipes = Recipe::where('user_id', $user->id)->paginate(4);
+
+        return view('recipes.index')->with('recipes',$recipes)->with('user',$user);
     }
 
     /**
@@ -102,8 +107,13 @@ class RecipeController extends Controller
      */
     public function show(Recipe $recipe)
     {
-        //$recipe= Recipe::findOrFail($recipe);
-        return view('recipes.show',compact('recipe'));
+        //get if user likes actual recipe and if is logued
+        $like = (auth()->user()) ? auth()->user()->iLike->contains($recipe->id)  :false;
+
+        // send to the view the amount of likes
+        $likes = $recipe->likes->count();
+
+        return view('recipes.show',compact('recipe','like','likes'));
     }
 
     /**
@@ -114,6 +124,7 @@ class RecipeController extends Controller
      */
     public function edit(Recipe $recipe)
     {
+        $this->authorize('view', $recipe);
         $categories = RecipeCategory::all(['id','name']);
         return view('recipes.edit',compact('categories','recipe'));
     }
@@ -170,5 +181,14 @@ class RecipeController extends Controller
         $this->authorize('delete',$recipe);
         $recipe->delete();
         return redirect()->action('RecipeController@index');
+    }
+
+    public function search(Request $request)
+    {
+
+        $search = $request->get('search');
+        $recipes = Recipe::where('title','like','%'.$search.'%')->paginate(10);
+        $recipes->append(['search'=>$search]);
+        return view('searches.show', compact('recipes','search'));
     }
 }

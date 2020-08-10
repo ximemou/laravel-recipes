@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Recipe;
+use App\Profile;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class RecipePolicy
+class ProfilePolicy
 {
     use HandlesAuthorization;
 
@@ -25,12 +25,12 @@ class RecipePolicy
      * Determine whether the user can view the model.
      *
      * @param  \App\User  $user
-     * @param  \App\Recipe  $recipe
+     * @param  \App\Profile  $profile
      * @return mixed
      */
-    public function view(User $user, Recipe $recipe)
+    public function view(User $user, Profile $profile)
     {
-        return $user->id === $recipe->user_id;
+        return $user->id === $profile->user_id;
     }
 
     /**
@@ -48,36 +48,35 @@ class RecipePolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\User  $user
-     * @param  \App\Recipe  $recipe
+     * @param  \App\Profile  $profile
      * @return mixed
      */
-    public function update(User $user, Recipe $recipe)
+    public function update(User $user, Profile $profile)
     {
-        //checks if auth user is the same that created the recipe
-        return $user->id === $recipe->user_id;
+        //verifys if auth user is updating the profile
+        return $user->id === $profile->user_id;
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\User  $user
-     * @param  \App\Recipe  $recipe
+     * @param  \App\Profile  $profile
      * @return mixed
      */
-    public function delete(User $user, Recipe $recipe)
+    public function delete(User $user, Profile $profile)
     {
-        //checks if auth user is the same that created the recipe
-        return $user->id === $recipe->user_id;
+        //
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\User  $user
-     * @param  \App\Recipe  $recipe
+     * @param  \App\Profile  $profile
      * @return mixed
      */
-    public function restore(User $user, Recipe $recipe)
+    public function restore(User $user, Profile $profile)
     {
         //
     }
@@ -86,10 +85,10 @@ class RecipePolicy
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\User  $user
-     * @param  \App\Recipe  $recipe
+     * @param  \App\Profile  $profile
      * @return mixed
      */
-    public function forceDelete(User $user, Recipe $recipe)
+    public function forceDelete(User $user, Profile $profile)
     {
         //
     }

@@ -1,7 +1,7 @@
 @extends('layouts.app');
 
 @section('buttons')
-<a  href="{{route('recipes.create')}}" class="btn btn-primary mr-2 text-white"> Crear receta </a>
+    @include('ui.navigation')
 @endsection
 
 @section('content')
@@ -31,6 +31,28 @@
 
             </tbody>
         </table>
+
+        <div class="col-12 mt-4 justify-content-center d-flex">
+            {{$recipes->links()}}
+        </div>
+
+        <h2 class="text-center my-5"> Recetas que te gustan</h2>
+        <div class="col-md-10 mx-auto bg-white p-3">
+            @if(count($user->iLike)>0)
+                <ul class="list-group">
+                    @foreach($user->iLike as $recipe)
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <p>{{$recipe->title}}</p>
+                            <a class="btn btn-outline-success text-uppercase font-weight-bold" href="{{route('recipes.show',['recipe'=> $recipe->id])}}"> Ver</a>
+                        </li>
+                    @endforeach
+                </ul>
+            @else
+                <p class="text-center"> No tienes recetas guardadas
+                    <small> Dale me gusta a las recetas y apareceran aqui </small>
+                </p>
+            @endif
+        </div>
     </div>
 @endsection
 
